@@ -18,7 +18,7 @@ Documentatia pentru Kind: https://kind.sigs.k8s.io/
 
 # Exemplu din aplicatie
 
-(./summarize.png)
+![](./summarize.png)
 
 ## Testele de performanta
 
@@ -32,7 +32,7 @@ Documentatie pentru JMeter: https://jmeter.apache.org/usermanual/index.html
 
 # Exemplu de test din JMeter
 
-(./jmeter.png)
+![](./jmeter.png)
 
 ## Azure Load Testing
 
@@ -50,7 +50,7 @@ De asemenea, toate serviciile si instructiunile realizate in Azure vor fi facute
 
 # Exemplu de test rulat in Azure Load Testing
 
-(./azureLoadTesting.png)
+![](./azureLoadTesting.png)
 
 ## Documentatie pentru cloud
 
