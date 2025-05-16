@@ -9,6 +9,8 @@ portNumber = int(os.environ.get("PORT_NUMBER"))
 
 app = Flask(__name__)
 
+requests_served = 0
+
 class Summarizer:
     def __init__(self):
         self.summarizer = pipeline("summarization", model="t5-base", tokenizer="t5-base", framework="pt")
@@ -22,6 +24,8 @@ chatBot = Summarizer()
 print("Starting server...")
 @app.route("/", methods=["GET"])
 def home():
+    global requests_served
+    requests_served += 1
     return render_template_string('''
     <!DOCTYPE html>
 <html>
@@ -32,6 +36,7 @@ def home():
     <h1>Welcome to the Text Summarizer</h1>
     <p>Click below to summarize your text. Project made by Gherca Darius for the Cloud Computing Tehnologies for ML Workloads class</p>
     <a href="/summarize">Go to Summarizer</a>
+    <a href="/requests-counter">See number of served requests</a> 
 </body>
 </html>
 
@@ -39,7 +44,9 @@ def home():
 
 @app.route("/summarize", methods=["GET", "POST"])
 def summarize():
+    global requests_served
     if request.method == "GET":
+        requests_served += 1
         return render_template_string('''
         <!DOCTYPE html>
 <html>
@@ -57,6 +64,7 @@ def summarize():
 </html>
 ''')
     else:
+        requests_served += 1
         text = request.form.get("text")
         summary = chatBot.summarize(text)
         return render_template_string(f'''
@@ -75,7 +83,39 @@ def summarize():
 </body>
 </html>
         ''')
+    
+@app.route("/requests-counter", methods=["GET"])
+def health_check():
+    global requests_served
+    return render_template_string(f'''
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>Number of requests served</title>
+</head>
+<body>
+    <p>{requests_served}</p>
+    <a href="/reset">Reset counter</a>
+</body>
+</html>
+    ''')
 
+@app.route("/reset", methods=["GET"])
+def reset():
+    global requests_served
+    requests_served = 0
+    return render_template_string(f'''
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>Number of requests served</title>
+</head>
+<body>
+    <p>Reset counter of served requests to 0</p>
+    <a href="/requests-counter">See number of served requests</a>
+</body>
+</html>
+    ''')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=portNumber)

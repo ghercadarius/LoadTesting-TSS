@@ -18,7 +18,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: ghercadarius/testing-app:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 5005

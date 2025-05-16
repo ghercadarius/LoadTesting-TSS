@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summary-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: summary-app
+  template:
+    metadata:
+      labels:
+        app: summary-app
+    spec:
+      containers:
+        - name: summary-container
+          image: ghercadarius/summary-app:latest
+          env:
+            - name: PORT_NUMBER
+              value: "5050"
+          ports:
+            - containerPort: 5050

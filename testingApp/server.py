@@ -49,6 +49,10 @@ def run_test():
         return jsonify({'message': 'Test run successfully', 'result_file': result_filename, 'results': result_text}), 200
     except subprocess.CalledProcessError as e:
         return jsonify({'error': 'Execution failed', 'details': str(e)}), 500
+    
+@app.route('/health-check', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'ok'}), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
