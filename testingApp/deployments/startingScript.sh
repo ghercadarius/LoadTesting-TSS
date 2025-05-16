@@ -14,7 +14,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Script directory: $SCRIPT_DIR"
 
-# Get the list of pod names matching the app label
 PODS=$(kubectl get pods -o jsonpath='{.items[*].metadata.name}')
 
 if [ -z "$PODS" ]; then
@@ -50,7 +49,6 @@ for POD in $PODS; do
   LOCAL_PORT=$((START_PORT + i))
   echo "Forwarding $POD to localhost:$LOCAL_PORT"
   
-  # Run kubectl port-forward in background and disown it
   kubectl port-forward -n "$NAMESPACE" pod/"$POD" "$LOCAL_PORT":5005 > /dev/null 2>&1 &
   
   echo "Access with: curl http://localhost:$LOCAL_PORT/"
@@ -60,7 +58,6 @@ done
 echo "Done. All port-forwards are running in the background."
 echo "Uploading the test file to all the pods..."
 
-# check for localhost:local_port/health-check endpoint for all pods
 echo "Waiting for pods to be healthy..."
 while true; do
   ALL_HEALTHY=1
@@ -93,7 +90,6 @@ for POD in $PODS; do
   LOCAL_PORT=$((START_PORT + i))
   echo "starting upload to $POD on localhost:$LOCAL_PORT"
   
-  # Run kubectl port-forward in background and disown it
   curl -X POST http://localhost:$LOCAL_PORT/upload_test -F "file=@${JMX_PATH}"
   echo "Upload complete for localhost:$LOCAL_PORT"
   i=$((i + 1))
@@ -106,8 +102,7 @@ for POD in $PODS; do
   LOCAL_PORT=$((START_PORT + i))
   echo "starting test on localhost:$LOCAL_PORT"
   
-  # Run kubectl port-forward in background and disown it
-  curl -X POST http://localhost:$LOCAL_PORT/run
+  curl -X POST http://localhost:$LOCAL_PORT/run &
   echo "Test started on localhost:$LOCAL_PORT"
   i=$((i + 1))
 done
